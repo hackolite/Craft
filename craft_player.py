@@ -17,7 +17,7 @@ class Player:
     
     def __init__(self):
         # Position and orientation
-        self.position = Vector3(0, 32, 0)  # Start above ground
+        self.position = Vector3(0, 10, 0)  # Will be adjusted to ground level
         self.velocity = Vector3(0, 0, 0)
         self.rotation_x = 0.0  # Pitch (up/down)
         self.rotation_y = 0.0  # Yaw (left/right)
@@ -26,6 +26,7 @@ class Player:
         self.flying = False
         self.on_ground = False
         self.in_water = False
+        self._spawn_positioned = False  # Track if we've positioned player correctly
         
         # Movement flags
         self.moving_forward = False
@@ -52,6 +53,11 @@ class Player:
     
     def update(self, dt, input_handler, world):
         """Update player physics and movement"""
+        # Ensure player is positioned correctly on first update
+        if not self._spawn_positioned:
+            self._position_at_spawn(world)
+            self._spawn_positioned = True
+        
         # Handle input
         self._handle_input(input_handler)
         
@@ -211,6 +217,27 @@ class Player:
             self.rotation_y -= 360
         while self.rotation_y < -180:
             self.rotation_y += 360
+    
+    def _position_at_spawn(self, world):
+        """Position player at appropriate spawn height"""
+        spawn_x, spawn_z = 0, 0
+        
+        # Force world generation around spawn point
+        spawn_position = Vector3(spawn_x, 0, spawn_z)
+        world.update(spawn_position)
+        
+        # Find ground level at spawn
+        ground_level = 1  # Default fallback
+        for y in range(64, 0, -1):
+            block = world.get_block(spawn_x, y, spawn_z)
+            if not block.is_empty():
+                ground_level = y + 1  # Place player 1 block above ground
+                break
+        
+        # Set player position with small extra height for safety
+        self.position = Vector3(spawn_x, ground_level + 1.5, spawn_z)
+        print(f"Player positioned at spawn: {self.position.x}, {self.position.y}, {self.position.z}")
+        print(f"Ground level at spawn: {ground_level - 1}")
     
     def toggle_flying(self):
         """Toggle flying mode"""
