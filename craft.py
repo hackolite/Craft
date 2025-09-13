@@ -44,6 +44,9 @@ class CraftGame(pyglet.window.Window):
         glCullFace(GL_BACK)
         glDepthFunc(GL_LESS)
         
+        # Set sky blue background color
+        glClearColor(0.53, 0.81, 0.92, 1.0)  # Light blue sky color
+        
         # Game state
         self.running = True
         self.dt = 0.0
