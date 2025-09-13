@@ -1,0 +1,129 @@
+"""
+Game configuration constants
+Converted from config.h
+"""
+
+# Import pyglet key constants only when needed
+def get_key_constants():
+    import pyglet.window.key as key
+    return key
+
+# App parameters
+DEBUG = False
+FULLSCREEN = False
+WINDOW_WIDTH = 1024
+WINDOW_HEIGHT = 768
+VSYNC = True
+SCROLL_THRESHOLD = 0.1
+MAX_MESSAGES = 4
+DB_PATH = "craft.db"
+USE_CACHE = True
+DAY_LENGTH = 600
+INVERT_MOUSE = False
+
+# Rendering options
+SHOW_LIGHTS = True
+SHOW_PLANTS = True
+SHOW_CLOUDS = True
+SHOW_TREES = True
+SHOW_ITEM = True
+SHOW_CROSSHAIRS = True
+SHOW_WIREFRAME = True
+SHOW_INFO_TEXT = True
+SHOW_CHAT_TEXT = True
+SHOW_PLAYER_NAMES = True
+
+# Key bindings (using Pyglet key constants - will be set at runtime)
+CRAFT_KEY_FORWARD = 'W'
+CRAFT_KEY_BACKWARD = 'S'
+CRAFT_KEY_LEFT = 'A'
+CRAFT_KEY_RIGHT = 'D'
+CRAFT_KEY_JUMP = 'SPACE'
+CRAFT_KEY_FLY = 'TAB'
+CRAFT_KEY_OBSERVE = 'O'
+CRAFT_KEY_OBSERVE_INSET = 'P'
+CRAFT_KEY_ITEM_NEXT = 'E'
+CRAFT_KEY_ITEM_PREV = 'R'
+CRAFT_KEY_ZOOM = 'LSHIFT'
+CRAFT_KEY_ORTHO = 'F'
+CRAFT_KEY_CHAT = 'T'
+CRAFT_KEY_COMMAND = 'SLASH'
+CRAFT_KEY_SIGN = 'GRAVE'
+
+def init_key_bindings():
+    """Initialize key bindings with actual Pyglet constants"""
+    global CRAFT_KEY_FORWARD, CRAFT_KEY_BACKWARD, CRAFT_KEY_LEFT, CRAFT_KEY_RIGHT
+    global CRAFT_KEY_JUMP, CRAFT_KEY_FLY, CRAFT_KEY_OBSERVE, CRAFT_KEY_OBSERVE_INSET
+    global CRAFT_KEY_ITEM_NEXT, CRAFT_KEY_ITEM_PREV, CRAFT_KEY_ZOOM, CRAFT_KEY_ORTHO
+    global CRAFT_KEY_CHAT, CRAFT_KEY_COMMAND, CRAFT_KEY_SIGN
+    
+    key = get_key_constants()
+    
+    CRAFT_KEY_FORWARD = key.W
+    CRAFT_KEY_BACKWARD = key.S
+    CRAFT_KEY_LEFT = key.A
+    CRAFT_KEY_RIGHT = key.D
+    CRAFT_KEY_JUMP = key.SPACE
+    CRAFT_KEY_FLY = key.TAB
+    CRAFT_KEY_OBSERVE = key.O
+    CRAFT_KEY_OBSERVE_INSET = key.P
+    CRAFT_KEY_ITEM_NEXT = key.E
+    CRAFT_KEY_ITEM_PREV = key.R
+    CRAFT_KEY_ZOOM = key.LSHIFT
+    CRAFT_KEY_ORTHO = key.F
+    CRAFT_KEY_CHAT = key.T
+    CRAFT_KEY_COMMAND = key.SLASH
+    CRAFT_KEY_SIGN = key.GRAVE
+
+# Advanced parameters
+CREATE_CHUNK_RADIUS = 10
+RENDER_CHUNK_RADIUS = 10
+RENDER_SIGN_RADIUS = 4
+DELETE_CHUNK_RADIUS = 14
+CHUNK_SIZE = 32
+COMMIT_INTERVAL = 5
+
+# Block types (from original code)
+EMPTY = 0
+GRASS = 1
+SAND = 2
+STONE = 3
+BRICK = 4
+WOOD = 5
+CEMENT = 6
+DIRT = 7
+PLANK = 8
+SNOW = 9
+GLASS = 10
+COBBLE = 11
+LIGHT_STONE = 12
+DARK_STONE = 13
+CHEST = 14
+LEAVES = 15
+CLOUD = 16
+TALL_GRASS = 17
+YELLOW_FLOWER = 18
+RED_FLOWER = 19
+PURPLE_FLOWER = 20
+SUN_FLOWER = 21
+WHITE_FLOWER = 22
+BLUE_FLOWER = 23
+
+# Plant blocks
+PLANT_BLOCKS = {TALL_GRASS, YELLOW_FLOWER, RED_FLOWER, PURPLE_FLOWER, 
+                SUN_FLOWER, WHITE_FLOWER, BLUE_FLOWER}
+
+# Transparent blocks
+TRANSPARENT_BLOCKS = {GLASS, LEAVES, CLOUD} | PLANT_BLOCKS
+
+# Physics constants
+GRAVITY = 20.0
+JUMP_VELOCITY = 8.0
+WALKING_SPEED = 5.0
+FLYING_SPEED = 20.0
+TERMINAL_VELOCITY = 50.0
+
+# Render constants
+FOV = 65.0
+NEAR_PLANE = 0.1
+FAR_PLANE = 500.0
