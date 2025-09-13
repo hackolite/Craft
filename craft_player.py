@@ -3,7 +3,12 @@ Player class for movement and camera control
 """
 
 import math
-from pyglet.gl import *
+try:
+    from pyglet.gl import *
+    GL_AVAILABLE = True
+except:
+    GL_AVAILABLE = False
+
 from craft_math import Vector3, Matrix4, radians, clamp
 from craft_config import *
 
@@ -143,6 +148,9 @@ class Player:
     
     def apply_camera_transform(self):
         """Apply camera transformation to OpenGL matrix stack"""
+        if not GL_AVAILABLE:
+            return
+            
         # Apply rotation (pitch and yaw)
         glRotatef(-self.rotation_x, 1, 0, 0)  # Pitch
         glRotatef(-self.rotation_y, 0, 1, 0)  # Yaw
