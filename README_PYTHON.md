@@ -30,12 +30,20 @@ pip install pyglet numpy pillow
 3. Run the game:
 ```bash
 python3 craft.py
+# OR use the simple launcher
+python3 run_craft.py
 ```
 
 Or test the modules without a display:
 ```bash
 python3 launcher.py test
 ```
+
+## Recent Fixes
+
+### Black Screen Issue Fixed ✅
+**Issue**: Players were spawning too high above the ground (Y=32 vs terrain at Y=8), causing a black screen.
+**Solution**: Player now automatically spawns at proper height above ground level for optimal visibility.
 
 ## Controls
 
