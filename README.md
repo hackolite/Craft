@@ -1,219 +1,361 @@
-## Craft
+# Craft
 
-Minecraft clone for Windows, Mac OS X and Linux. Just a few thousand lines of C using modern OpenGL (shaders). Online multiplayer support is included using a Python-based server.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-blue)](#installation)
+[![Language](https://img.shields.io/badge/language-C%20%7C%20Python-green)](#implementations)
 
-http://www.michaelfogleman.com/craft/
+A Minecraft-like voxel game with both **C/OpenGL** and **Python/Pyglet** implementations. Features infinite terrain generation, multiplayer support, and modern graphics rendering.
+
+🌐 **Website**: http://www.michaelfogleman.com/craft/
 
 ![Screenshot](https://i.imgur.com/SH7wcas.png)
 
-### Features
+## 🚀 Quick Start
 
-* Simple but nice looking terrain generation using perlin / simplex noise.
-* More than 10 types of blocks and more can be added easily.
-* Supports plants (grass, flowers, trees, etc.) and transparency (glass).
-* Simple clouds in the sky (they don't move).
-* Day / night cycles and a textured sky dome.
-* World changes persisted in a sqlite3 database.
-* Multiplayer support!
+**Choose your implementation:**
 
-### Download
+| **C/OpenGL Version** (Original) | **Python Version** (Modern Port) |
+|---|---|
+| ✅ Full-featured and optimized | ✅ Easy to modify and extend |
+| ✅ High performance | ✅ Cross-platform Python |
+| ✅ Production ready | 🚧 In active development |
+| [📖 Full C Documentation](#c-implementation) | [📖 Python Documentation](README_PYTHON.md) |
 
-Mac and Windows binaries are available on the website.
+### 🐍 Python Version (Recommended for Development)
 
-http://www.michaelfogleman.com/craft/
+```bash
+# Install dependencies
+pip install pyglet numpy pillow
 
-See below to run from source.
+# Run the game
+python3 craft.py
+```
 
-### Install Dependencies
+### ⚡ C Version (Recommended for Performance)
 
-#### Mac OS X
+```bash
+# Install dependencies (see detailed instructions below)
+# Then build and run:
+git clone https://github.com/hackolite/Craft.git
+cd Craft
+cmake .
+make
+./craft
+```
 
-Download and install [CMake](http://www.cmake.org/cmake/resources/software.html)
-if you don't already have it. You may use [Homebrew](http://brew.sh) to simplify
-the installation:
+## 📋 Table of Contents
 
-    brew install cmake
+- [Features](#-features)
+- [Implementations](#-implementations)
+- [Installation](#-installation)
+  - [C Implementation](#c-implementation)
+  - [Python Implementation](#python-implementation)
+- [Multiplayer](#-multiplayer)
+- [Controls](#-controls)
+- [Chat Commands](#-chat-commands)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-#### Linux (Ubuntu)
+## ✨ Features
 
-    sudo apt-get install cmake libglew-dev xorg-dev libcurl4-openssl-dev
-    sudo apt-get build-dep glfw
+### 🌍 World Generation
+- **Infinite terrain** using Perlin/Simplex noise algorithms
+- **Chunk-based loading** (32x32 blocks) for optimal performance
+- **10+ block types** with easy extensibility
+- **Natural structures**: grass, flowers, trees, and landscapes
 
-#### Windows
+### 🎮 Gameplay
+- **Building & destruction** with left/right click mechanics
+- **Flying and walking modes** with realistic physics
+- **Day/night cycles** with dynamic lighting
+- **Transparent blocks** (glass) and natural plants
+- **World persistence** via SQLite3 database
 
-Download and install [CMake](http://www.cmake.org/cmake/resources/software.html)
-and [MinGW](http://www.mingw.org/). Add `C:\MinGW\bin` to your `PATH`.
+### 🌐 Multiplayer
+- **Client-server architecture** with Python server
+- **Real-time synchronization** of player actions
+- **Chat system** with commands
+- **Player observation** modes (main view + picture-in-picture)
 
-Download and install [cURL](http://curl.haxx.se/download.html) so that
-CURL/lib and CURL/include are in your Program Files directory.
+### 🎨 Graphics
+- **Modern OpenGL** with vertex/fragment shaders
+- **Ambient occlusion** for realistic lighting
+- **Textured sky dome** with time-based transitions
+- **Frustum culling** and optimization for smooth performance
 
-Use the following commands in place of the ones described in the next section.
+## 🛠️ Implementations
 
-    cmake -G "MinGW Makefiles"
-    mingw32-make
+This repository contains **two complete implementations** of the Craft game:
 
-### Compile and Run
+### C Implementation (Original)
+- **Language**: C99 with OpenGL
+- **Performance**: Highly optimized, production-ready
+- **Features**: Complete feature set, mature codebase
+- **Best for**: Playing the game, high-performance needs
+- **Location**: `src/` directory, built with CMake
 
-Once you have the dependencies (see above), run the following commands in your
-terminal.
+### Python Implementation (Modern Port)
+- **Language**: Python 3.7+ with Pyglet
+- **Performance**: Good performance, easier to modify
+- **Features**: Core features implemented, actively developed
+- **Best for**: Learning, modding, experimentation
+- **Location**: `craft*.py` files
+- **Documentation**: [README_PYTHON.md](README_PYTHON.md)
 
-    git clone https://github.com/fogleman/Craft.git
-    cd Craft
-    cmake .
-    make
-    ./craft
+Both implementations are compatible with the same:
+- 🗺️ World save format
+- 🌐 Multiplayer server
+- 🎨 Texture assets
+- 🎮 Game mechanics
 
-### Multiplayer
+## 💻 Installation
 
-After many years, craft.michaelfogleman.com has been taken down. See the [Server](#server) section for info on self-hosting.
+### C Implementation
 
-#### Client
+**Dependencies needed:**
+- CMake 2.8+
+- OpenGL development libraries
+- CURL development libraries
 
-You can connect to a server with command line arguments...
+#### 🍎 macOS
 
+```bash
+# Using Homebrew (recommended)
+brew install cmake
+
+# Or download from: http://www.cmake.org/cmake/resources/software.html
+```
+
+#### 🐧 Linux (Ubuntu/Debian)
+
+```bash
+sudo apt-get update
+sudo apt-get install cmake libglew-dev xorg-dev libcurl4-openssl-dev
+sudo apt-get build-dep glfw
+```
+
+#### 🪟 Windows
+
+1. **Install dependencies:**
+   - Download and install [CMake](http://www.cmake.org/cmake/resources/software.html)
+   - Download and install [MinGW](http://www.mingw.org/)
+   - Add `C:\MinGW\bin` to your `PATH`
+   - Download [cURL](http://curl.haxx.se/download.html) so that CURL/lib and CURL/include are in your Program Files
+
+2. **Build with MinGW:**
+   ```bash
+   cmake -G "MinGW Makefiles"
+   mingw32-make
+   ```
+
+#### 🔨 Build and Run (All Platforms)
+
+```bash
+git clone https://github.com/hackolite/Craft.git
+cd Craft
+cmake .
+make
+./craft
+```
+
+### Python Implementation
+
+**Requirements:**
+- Python 3.7+
+- Pyglet 2.0+
+- NumPy
+- Pillow
+
+#### 📦 Installation
+
+```bash
+# Install Python dependencies
+pip install pyglet numpy pillow
+
+# Clone repository (if not already done)
+git clone https://github.com/hackolite/Craft.git
+cd Craft
+
+# Run Python version
+python3 craft.py
+
+# Or test modules
+python3 launcher.py test
+```
+
+> 📚 **Detailed Python Documentation**: See [README_PYTHON.md](README_PYTHON.md) for complete Python implementation details.
+
+## 🌐 Multiplayer
+
+> **Note**: The original craft.michaelfogleman.com server has been taken down. You'll need to run your own server for multiplayer.
+
+### 🖥️ Server Setup
+
+**Compile the world generation library:**
+```bash
+gcc -std=c99 -O3 -fPIC -shared -o world -I src -I deps/noise deps/noise/noise.c src/world.c
+```
+
+**Run the Python server:**
+```bash
+python server.py [HOST [PORT]]
+```
+
+### 🎮 Client Connection
+
+**Command line:**
 ```bash
 ./craft [HOST [PORT]]
 ```
 
-Or, with the "/online" command in the game itself.
-    
-    /online [HOST [PORT]]
-
-#### Server
-
-You can run your own server or connect to mine. The server is written in Python
-but requires a compiled DLL so it can perform the terrain generation just like
-the client.
-
-```bash
-gcc -std=c99 -O3 -fPIC -shared -o world -I src -I deps/noise deps/noise/noise.c src/world.c
-python server.py [HOST [PORT]]
+**In-game command:**
+```
+/online [HOST [PORT]]
 ```
 
-### Controls
+## 🎮 Controls
 
-- WASD to move forward, left, backward, right.
-- Space to jump.
-- Left Click to destroy a block.
-- Right Click or Cmd + Left Click to create a block.
-- Ctrl + Right Click to toggle a block as a light source.
-- 1-9 to select the block type to create.
-- E to cycle through the block types.
-- Tab to toggle between walking and flying.
-- ZXCVBN to move in exact directions along the XYZ axes.
-- Left shift to zoom.
-- F to show the scene in orthographic mode.
-- O to observe players in the main view.
-- P to observe players in the picture-in-picture view.
-- T to type text into chat.
-- Forward slash (/) to enter a command.
-- Backquote (`) to write text on any block (signs).
-- Arrow keys emulate mouse movement.
-- Enter emulates mouse click.
+### 🚶 Movement
+| Key | Action |
+|-----|--------|
+| **WASD** | Move forward, left, backward, right |
+| **Space** | Jump |
+| **Tab** | Toggle between walking and flying |
+| **ZXCVBN** | Move in exact XYZ directions |
 
-### Chat Commands
+### 🔨 Building
+| Key | Action |
+|-----|--------|
+| **Left Click** | Destroy block |
+| **Right Click** | Create block (or **Cmd + Left Click** on Mac) |
+| **Ctrl + Right Click** | Toggle block as light source |
+| **1-9** | Select block type to create |
+| **E** | Cycle through block types |
 
-    /goto [NAME]
+### 📷 Camera & View
+| Key | Action |
+|-----|--------|
+| **Mouse** | Look around |
+| **Left Shift** | Zoom |
+| **F** | Orthographic mode |
+| **O** | Observe players in main view |
+| **P** | Observe players in picture-in-picture |
+| **Arrow Keys** | Emulate mouse movement |
+| **Enter** | Emulate mouse click |
 
-Teleport to another user.
-If NAME is unspecified, a random user is chosen.
+### 💬 Communication
+| Key | Action |
+|-----|--------|
+| **T** | Type into chat |
+| **/** | Enter command |
+| **`** | Write text on blocks (signs) |
 
-    /list
+## 💬 Chat Commands
 
-Display a list of connected users.
+| Command | Description |
+|---------|-------------|
+| `/goto [NAME]` | Teleport to another user (random if NAME unspecified) |
+| `/list` | Display connected users |
+| `/login NAME` | Switch to registered username (case-sensitive) |
+| `/logout` | Become guest user |
+| `/offline [FILE]` | Switch to offline mode (default save: "craft") |
+| `/online HOST [PORT]` | Connect to specified server |
+| `/pq P Q` | Teleport to specified chunk coordinates |
+| `/spawn` | Return to spawn point |
 
-    /login NAME
+## 📸 Screenshots
 
-Switch to another registered username.
-The login server will be re-contacted. The username is case-sensitive.
+![Main Screenshot](https://i.imgur.com/foYz3aN.png)
 
-    /logout
+## 🔧 Technical Implementation
 
-Unauthenticate and become a guest user.
-Automatic logins will not occur again until the /login command is re-issued.
+### 🌍 World Generation
+- **Algorithm**: Simplex noise for deterministic, position-based terrain
+- **Architecture**: 32x32 block chunks with XZ plane organization  
+- **Persistence**: SQLite3 database stores only player modifications (delta)
+- **Optimization**: Only exposed block faces are rendered
 
-    /offline [FILE]
+### 🎨 Rendering Engine
+- **API**: Modern OpenGL with vertex/fragment shaders
+- **Performance**: Frustum culling, VBO optimization
+- **Effects**: Ambient occlusion, transparency, sky dome texturing
+- **Text**: Bitmap atlas rendering on 2D rectangles
 
-Switch to offline mode.
-FILE specifies the save file to use and defaults to "craft".
+### 🌐 Networking Protocol
+- **Transport**: Plain TCP sockets with ASCII line-based protocol
+- **Synchronization**: Real-time player positions, block updates, chat
+- **Caching**: Client-side chunk caching with delta updates
+- **Performance**: Background SQLite writes, transaction batching
 
-    /online HOST [PORT]
+### 🗃️ Dependencies
 
-Connect to the specified server.
+**C Implementation:**
+- **GLEW** - OpenGL extension management
+- **GLFW** - Cross-platform window management  
+- **CURL** - HTTPS/SSL for authentication
+- **lodepng** - PNG texture loading
+- **sqlite3** - World persistence
+- **tinycthread** - Cross-platform threading
 
-    /pq P Q
+**Python Implementation:**
+- **Pyglet** - OpenGL graphics and windowing
+- **NumPy** - Mathematical operations
+- **Pillow** - Image processing
 
-Teleport to the specified chunk.
+## 🤝 Contributing
 
-    /spawn
+### 🔧 Development Setup
 
-Teleport back to the spawn point.
+1. **Fork the repository**
+2. **Clone your fork**
+3. **Test both implementations:**
+   ```bash
+   # Test C build
+   cmake . && make
+   
+   # Test Python modules  
+   python3 launcher.py test
+   ```
 
-### Screenshot
+### 📝 Guidelines
 
-![Screenshot](https://i.imgur.com/foYz3aN.png)
+- 🎯 **Focus on minimal changes** for maximum compatibility
+- 🧪 **Test both C and Python** implementations when possible
+- 📚 **Update documentation** for any new features
+- 🔄 **Maintain compatibility** between implementations
 
-### Implementation Details
+### 🐛 Issues & Features
 
-#### Terrain Generation
+- 🐛 **Bug reports**: Please include OS, implementation (C/Python), and steps to reproduce
+- ✨ **Feature requests**: Consider implementation in both C and Python versions
+- 🤝 **Pull requests**: Test thoroughly and update relevant documentation
 
-The terrain is generated using Simplex noise - a deterministic noise function seeded based on position. So the world will always be generated the same way in a given location.
+## 📄 License
 
-The world is split up into 32x32 block chunks in the XZ plane (Y is up). This allows the world to be “infinite” (floating point precision is currently a problem at large X or Z values) and also makes it easier to manage the data. Only visible chunks need to be queried from the database.
+Licensed under the **MIT License** - see [LICENSE.md](LICENSE.md) for details.
 
-#### Rendering
+```
+Copyright (C) 2013 Michael Fogleman
 
-Only exposed faces are rendered. This is an important optimization as the vast majority of blocks are either completely hidden or are only exposing one or two faces. Each chunk records a one-block width overlap for each neighboring chunk so it knows which blocks along its perimeter are exposed.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software...
+```
 
-Only visible chunks are rendered. A naive frustum-culling approach is used to test if a chunk is in the camera’s view. If it is not, it is not rendered. This results in a pretty decent performance improvement as well.
+## 🙏 Credits
 
-Chunk buffers are completely regenerated when a block is changed in that chunk, instead of trying to update the VBO.
+**Original Author**: [Michael Fogleman](http://www.michaelfogleman.com)  
+**Python Port**: Community contributions  
+**Inspiration**: Minecraft by Mojang Studios
 
-Text is rendered using a bitmap atlas. Each character is rendered onto two triangles forming a 2D rectangle.
+---
 
-“Modern” OpenGL is used - no deprecated, fixed-function pipeline functions are used. Vertex buffer objects are used for position, normal and texture coordinates. Vertex and fragment shaders are used for rendering. Matrix manipulation functions are in matrix.c for translation, rotation, perspective, orthographic, etc. matrices. The 3D models are made up of very simple primitives - mostly cubes and rectangles. These models are generated in code in cube.c.
+### 📚 Additional Resources
 
-Transparency in glass blocks and plants (plants don’t take up the full rectangular shape of their triangle primitives) is implemented by discarding magenta-colored pixels in the fragment shader.
+- 🌐 **Project Website**: http://www.michaelfogleman.com/craft/
+- 🐍 **Python Documentation**: [README_PYTHON.md](README_PYTHON.md)
+- 🔧 **Technical Blog Post**: [Original implementation details](http://0fps.wordpress.com/2013/07/03/ambient-occlusion-for-minecraft-like-worlds/)
 
-#### Database
-
-User changes to the world are stored in a sqlite database. Only the delta is stored, so the default world is generated and then the user changes are applied on top when loading.
-
-The main database table is named “block” and has columns p, q, x, y, z, w. (p, q) identifies the chunk, (x, y, z) identifies the block position and (w) identifies the block type. 0 represents an empty block (air).
-
-In game, the chunks store their blocks in a hash map. An (x, y, z) key maps to a (w) value.
-
-The y-position of blocks are limited to 0 <= y < 256. The upper limit is mainly an artificial limitation to prevent users from building unnecessarily tall structures. Users are not allowed to destroy blocks at y = 0 to avoid falling underneath the world.
-
-#### Multiplayer
-
-Multiplayer mode is implemented using plain-old sockets. A simple, ASCII, line-based protocol is used. Each line is made up of a command code and zero or more comma-separated arguments. The client requests chunks from the server with a simple command: C,p,q,key. “C” means “Chunk” and (p, q) identifies the chunk. The key is used for caching - the server will only send block updates that have been performed since the client last asked for that chunk. Block updates (in realtime or as part of a chunk request) are sent to the client in the format: B,p,q,x,y,z,w. After sending all of the blocks for a requested chunk, the server will send an updated cache key in the format: K,p,q,key. The client will store this key and use it the next time it needs to ask for that chunk. Player positions are sent in the format: P,pid,x,y,z,rx,ry. The pid is the player ID and the rx and ry values indicate the player’s rotation in two different axes. The client interpolates player positions from the past two position updates for smoother animation. The client sends its position to the server at most every 0.1 seconds (less if not moving).
-
-Client-side caching to the sqlite database can be performance intensive when connecting to a server for the first time. For this reason, sqlite writes are performed on a background thread. All writes occur in a transaction for performance. The transaction is committed every 5 seconds as opposed to some logical amount of work completed. A ring / circular buffer is used as a queue for what data is to be written to the database.
-
-In multiplayer mode, players can observe one another in the main view or in a picture-in-picture view. Implementation of the PnP was surprisingly simple - just change the viewport and render the scene again from the other player’s point of view.
-
-#### Collision Testing
-
-Hit testing (what block the user is pointing at) is implemented by scanning a ray from the player’s position outward, following their sight vector. This is not a precise method, so the step rate can be made smaller to be more accurate.
-
-Collision testing simply adjusts the player’s position to remain a certain distance away from any adjacent blocks that are obstacles. (Clouds and plants are not marked as obstacles, so you pass right through them.)
-
-#### Sky Dome
-
-A textured sky dome is used for the sky. The X-coordinate of the texture represents time of day. The Y-values map from the bottom of the sky sphere to the top of the sky sphere. The player is always in the center of the sphere. The fragment shaders for the blocks also sample the sky texture to determine the appropriate fog color to blend with based on the block’s position relative to the backing sky.
-
-#### Ambient Occlusion
-
-Ambient occlusion is implemented as described on this page:
-
-http://0fps.wordpress.com/2013/07/03/ambient-occlusion-for-minecraft-like-worlds/
-
-#### Dependencies
-
-* GLEW is used for managing OpenGL extensions across platforms.
-* GLFW is used for cross-platform window management.
-* CURL is used for HTTPS / SSL POST for the authentication process.
-* lodepng is used for loading PNG textures.
-* sqlite3 is used for saving the blocks added / removed by the user.
-* tinycthread is used for cross-platform threading.
+**⭐ Star this repository if you found it useful!**
