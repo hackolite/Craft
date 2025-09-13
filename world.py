@@ -1,43 +1,37 @@
-# gcc -std=c99 -O3 -shared -o world \
-#   -I src -I deps/noise deps/noise/noise.c src/world.c
+"""
+Compatibility layer for existing server.py
+Uses our new craft_world module instead of the C library
+"""
 
-from ctypes import CDLL, CFUNCTYPE, c_float, c_int, c_void_p
+from craft_world import World as CraftWorld
 from collections import OrderedDict
 
-dll = CDLL('./world')
-
-WORLD_FUNC = CFUNCTYPE(None, c_int, c_int, c_int, c_int, c_void_p)
-
-def dll_seed(x):
-    dll.seed(x)
-
-def dll_create_world(p, q):
-    result = {}
-    def world_func(x, y, z, w, arg):
-        result[(x, y, z)] = w
-    dll.create_world(p, q, WORLD_FUNC(world_func), None)
-    return result
-
-dll.simplex2.restype = c_float
-dll.simplex2.argtypes = [c_float, c_float, c_int, c_float, c_float]
-def dll_simplex2(x, y, octaves=1, persistence=0.5, lacunarity=2.0):
-    return dll.simplex2(x, y, octaves, persistence, lacunarity)
-
-dll.simplex3.restype = c_float
-dll.simplex3.argtypes = [c_float, c_float, c_float, c_int, c_float, c_float]
-def dll_simplex3(x, y, z, octaves=1, persistence=0.5, lacunarity=2.0):
-    return dll.simplex3(x, y, z, octaves, persistence, lacunarity)
-
+# Compatibility wrapper to make our World work with the existing server
 class World(object):
     def __init__(self, seed=None, cache_size=64):
-        self.seed = seed
+        self.craft_world = CraftWorld(seed)
         self.cache = OrderedDict()
         self.cache_size = cache_size
+    
     def create_chunk(self, p, q):
-        if self.seed is not None:
-            dll_seed(self.seed)
-        return dll_create_world(p, q)
+        """Create chunk compatible with server expectations"""
+        # Use our world generation
+        chunk = self.craft_world.get_chunk(p, q)
+        if not chunk:
+            # Force generation if not exists
+            self.craft_world._generate_chunk(p, q)
+            chunk = self.craft_world.get_chunk(p, q)
+        
+        # Convert to format expected by server
+        result = {}
+        if chunk and chunk.blocks:
+            for (x, y, z), block in chunk.blocks.items():
+                result[(x, y, z)] = block.type
+        
+        return result
+    
     def get_chunk(self, p, q):
+        """Get chunk with caching"""
         try:
             chunk = self.cache.pop((p, q))
         except KeyError:
@@ -46,3 +40,15 @@ class World(object):
         if len(self.cache) > self.cache_size:
             self.cache.popitem(False)
         return chunk
+
+# Dummy noise functions for compatibility
+def dll_seed(x):
+    pass
+
+def dll_simplex2(x, y, octaves=1, persistence=0.5, lacunarity=2.0):
+    import math
+    return math.sin(x * 0.1) * math.cos(y * 0.1)
+
+def dll_simplex3(x, y, z, octaves=1, persistence=0.5, lacunarity=2.0):
+    import math
+    return math.sin(x * 0.1) * math.cos(y * 0.1) * math.sin(z * 0.1)

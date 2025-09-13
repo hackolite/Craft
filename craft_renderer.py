@@ -43,35 +43,54 @@ class Renderer:
     
     def _create_placeholder_textures(self):
         """Create simple placeholder textures"""
-        # Create a simple colored texture
-        from PIL import Image
+        # Create a simple colored texture atlas
+        import pyglet.image
         
-        # Block texture (16x16 grid of different colors)
-        block_img = Image.new('RGBA', (256, 256), (128, 128, 128, 255))
-        for i in range(16):
-            for j in range(16):
-                color = (
-                    int(128 + 127 * (i / 15)),
-                    int(128 + 127 * (j / 15)),
-                    128,
-                    255
-                )
-                for x in range(16):
-                    for y in range(16):
-                        block_img.putpixel((i*16 + x, j*16 + y), color)
+        # Create a 256x256 texture with a grid pattern
+        width, height = 256, 256
+        data = []
+        
+        for y in range(height):
+            for x in range(width):
+                # Create a checkerboard pattern with different colors for different blocks
+                block_x = x // 16
+                block_y = y // 16
+                block_id = block_y * 16 + block_x
+                
+                # Generate color based on block ID
+                r = (block_id * 37) % 256
+                g = (block_id * 73) % 256
+                b = (block_id * 131) % 256
+                
+                # Add checkerboard pattern within each block
+                if ((x % 16) < 8) ^ ((y % 16) < 8):
+                    r = min(255, r + 40)
+                    g = min(255, g + 40)
+                    b = min(255, b + 40)
+                
+                data.extend([r, g, b, 255])
         
         # Convert to Pyglet texture
-        self.textures['blocks'] = pyglet.image.ImageData(
-            256, 256, 'RGBA', block_img.tobytes()
-        ).get_texture()
+        image_data = pyglet.image.ImageData(
+            width, height, 'RGBA', bytes(data)
+        )
+        self.textures['blocks'] = image_data.get_texture()
         
-        # Sky texture (simple gradient)
-        sky_img = Image.new('RGBA', (256, 256), (135, 206, 235, 255))
-        self.textures['sky'] = pyglet.image.ImageData(
-            256, 256, 'RGBA', sky_img.tobytes()
-        ).get_texture()
+        # Sky texture (simple blue gradient)
+        sky_data = []
+        for y in range(256):
+            for x in range(256):
+                # Gradient from light blue to dark blue
+                blue_intensity = int(135 + (256 - y) * 120 / 256)
+                blue_intensity = min(255, max(0, blue_intensity))
+                sky_data.extend([135, 206, blue_intensity, 255])
         
-        print("Created placeholder textures")
+        sky_image = pyglet.image.ImageData(
+            256, 256, 'RGBA', bytes(sky_data)
+        )
+        self.textures['sky'] = sky_image.get_texture()
+        
+        print("Created placeholder textures with block atlas and sky gradient")
     
     def _create_crosshair(self):
         """Create crosshair for UI"""
@@ -236,23 +255,18 @@ class Renderer:
         if not vertices:
             return
         
-        # Convert to numpy array for OpenGL
-        vertex_array = np.array(vertices, dtype=np.float32)
+        # Convert vertices to proper format for OpenGL
+        # Each vertex: [x, y, z, u, v]
+        vertex_count = len(vertices) // 5
         
-        # Enable vertex arrays
-        glEnableClientState(GL_VERTEX_ARRAY)
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY)
-        
-        # Set up vertex and texture coordinate pointers
-        glVertexPointer(3, GL_FLOAT, 5 * 4, vertex_array)  # 5 floats per vertex (x,y,z,u,v)
-        glTexCoordPointer(2, GL_FLOAT, 5 * 4, vertex_array[3:])  # Offset to texture coords
-        
-        # Draw triangles
-        glDrawArrays(GL_TRIANGLES, 0, len(vertices) // 5)
-        
-        # Disable vertex arrays
-        glDisableClientState(GL_VERTEX_ARRAY)
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY)
+        # Draw vertices as triangles
+        glBegin(GL_TRIANGLES)
+        for i in range(0, len(vertices), 5):
+            # Texture coordinate
+            glTexCoord2f(vertices[i+3], vertices[i+4])
+            # Vertex position
+            glVertex3f(vertices[i], vertices[i+1], vertices[i+2])
+        glEnd()
     
     def render_ui(self, game):
         """Render 2D UI elements"""

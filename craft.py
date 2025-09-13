@@ -19,6 +19,7 @@ try:
     from craft_renderer import Renderer
     from craft_player import Player
     from craft_input import InputHandler
+    from craft_network import MultiplayerGame
 except ImportError as e:
     print(f"Error importing modules: {e}")
     print("Make sure all craft_*.py files are in the same directory")
@@ -53,6 +54,10 @@ class CraftGame(pyglet.window.Window):
         self.player = Player()
         self.renderer = Renderer()
         self.input_handler = InputHandler(self)
+        self.multiplayer = MultiplayerGame(self)
+        
+        # Game modes
+        self.offline_mode = True
         
         # Schedule update loop
         clock.schedule_interval(self.update, 1.0/60.0)  # 60 FPS
@@ -69,6 +74,9 @@ class CraftGame(pyglet.window.Window):
         
         # Update world
         self.world.update(self.player.position)
+        
+        # Update multiplayer
+        self.multiplayer.update()
     
     def on_draw(self):
         """Render the game"""
@@ -79,8 +87,16 @@ class CraftGame(pyglet.window.Window):
         glLoadIdentity()
         
         aspect = self.width / self.height
-        fov = 65.0
-        gluPerspective(fov, aspect, 0.1, 500.0)
+        fov = self.player.fov
+        
+        if self.player.ortho:
+            # Orthographic projection
+            size = 10
+            glOrtho(-size * aspect, size * aspect, -size, size, 0.1, 500.0)
+        else:
+            # Perspective projection
+            from pyglet.gl import glu
+            glu.gluPerspective(fov, aspect, 0.1, 500.0)
         
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
@@ -122,7 +138,22 @@ class CraftGame(pyglet.window.Window):
     def on_close(self):
         """Handle window close"""
         self.running = False
+        self.multiplayer.disconnect_from_server()
         self.close()
+    
+    def connect_to_server(self, host='127.0.0.1', port=4080):
+        """Connect to a multiplayer server"""
+        if self.multiplayer.connect_to_server(host, port):
+            self.offline_mode = False
+            print(f"Connected to multiplayer server at {host}:{port}")
+        else:
+            print("Failed to connect to server")
+    
+    def go_offline(self):
+        """Switch to offline mode"""
+        self.multiplayer.disconnect_from_server()
+        self.offline_mode = True
+        print("Switched to offline mode")
 
 def main():
     """Main entry point"""

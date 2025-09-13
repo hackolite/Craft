@@ -33,6 +33,12 @@ class InputHandler:
         elif symbol == key.F11:
             # Toggle fullscreen
             self.game.set_fullscreen(not self.game.fullscreen)
+        elif symbol == key.M and (modifiers & key.MOD_CTRL):
+            # Ctrl+M: Toggle multiplayer
+            if self.game.offline_mode:
+                self.game.connect_to_server()
+            else:
+                self.game.go_offline()
     
     def on_key_release(self, symbol, modifiers):
         """Handle key release events"""
@@ -63,13 +69,51 @@ class InputHandler:
     
     def _handle_block_destroy(self):
         """Handle block destruction"""
-        # TODO: Implement block destruction logic
-        pass
+        # Cast ray from player position to find target block
+        hit_result = self._cast_ray()
+        if hit_result:
+            x, y, z = hit_result
+            self.game.world.set_block(x, y, z, EMPTY)
+            print(f"Destroyed block at {x}, {y}, {z}")
     
     def _handle_block_place(self):
         """Handle block placement"""
-        # TODO: Implement block placement logic
-        pass
+        # Cast ray to find placement position
+        hit_result = self._cast_ray(for_placement=True)
+        if hit_result:
+            x, y, z = hit_result
+            # Place grass block by default
+            self.game.world.set_block(x, y, z, GRASS)
+            print(f"Placed block at {x}, {y}, {z}")
+    
+    def _cast_ray(self, for_placement=False):
+        """Cast ray from player to find block intersection"""
+        player = self.game.player
+        forward = player.get_forward_vector()
+        
+        # Ray casting parameters
+        max_distance = 10.0
+        step_size = 0.1
+        
+        # Cast ray
+        for i in range(int(max_distance / step_size)):
+            distance = i * step_size
+            pos = player.position + forward * distance
+            
+            x, y, z = int(pos.x), int(pos.y), int(pos.z)
+            block = self.game.world.get_block(x, y, z)
+            
+            if not block.is_empty():
+                if for_placement:
+                    # Return the position just before the hit block
+                    prev_distance = max(0, distance - step_size)
+                    prev_pos = player.position + forward * prev_distance
+                    return int(prev_pos.x), int(prev_pos.y), int(prev_pos.z)
+                else:
+                    # Return the hit block position
+                    return x, y, z
+        
+        return None
     
     def toggle_mouse_capture(self):
         """Toggle mouse capture state"""
